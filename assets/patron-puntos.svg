@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <pattern id="puntos-geometricos" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <!-- Puntos en cuadrícula sutil - ciruela -->
+      <circle cx="30" cy="30" r="1.5" fill="#3D1E3A" opacity="0.03"/>
+      <circle cx="30" cy="30" r="3" fill="none" stroke="#3D1E3A" stroke-width="0.3" opacity="0.02"/>
+      <!-- Puntos desplazados - arena -->
+      <circle cx="0" cy="0" r="1" fill="#F2B38B" opacity="0.02"/>
+      <circle cx="60" cy="60" r="1" fill="#F2B38B" opacity="0.02"/>
+      <circle cx="0" cy="60" r="1" fill="#F2B38B" opacity="0.02"/>
+      <circle cx="60" cy="0" r="1" fill="#F2B38B" opacity="0.02"/>
+    </pattern>
+    <pattern id="puntos-grandes" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+      <!-- Puntos más grandes dispersos -->
+      <circle cx="20" cy="30" r="2" fill="#3D1E3A" opacity="0.025"/>
+      <circle cx="80" cy="90" r="1.5" fill="#3D1E3A" opacity="0.02"/>
+      <circle cx="100" cy="20" r="2.5" fill="#F2B38B" opacity="0.018"/>
+      <circle cx="10" cy="100" r="2" fill="#F2B38B" opacity="0.015"/>
+    </pattern>
+  </defs>
+  <!-- Combinar ambos patrones -->
+  <rect width="400" height="400" fill="url(#puntos-geometricos)"/>
+  <rect width="400" height="400" fill="url(#puntos-grandes)"/>
+</svg>

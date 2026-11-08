@@ -1,0 +1,1833 @@
+/* =====================================================================
+   MENTE EN CALMA — Hoja de estilos única
+   Estética de producto Apple (macOS/iOS): tipografía de sistema,
+   mucho aire, cristal esmerilado, sombras en capas y bento box.
+
+   Orden:
+   1. Variables (paleta, radios, sombras, curva de movimiento)
+   2. Base y tipografía
+   3. Utilidades (contenedores, rejillas, botones)
+   4. Cabecera y menú (cristal esmerilado)
+   5. HERO (orbes desenfocados al estilo macOS)
+   6. QUE ES (7 + 5 columnas, tarjeta desplazada)
+   7. SENALES (full-bleed menta, tarjetas blancas con iconos SVG)
+   8. MITOS (beige, 2 columnas, tarjetas volteables)
+   9. ACTIVIDADES (bento box 3 columnas)
+   10. AYUDA (full-bleed menta, pasos)
+   11. AVISO
+   12. Componentes: tarjetas, mitos volteables, respiración,
+       diario, frases y quiz
+   13. Botón "volver arriba"
+   14. Animaciones de entrada (.revelar)
+   15. Pie
+   16. Responsive
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. VARIABLES — paleta, radios, sombras suaves y curva de movimiento
+   Paleta basada en el logo: arena (#F2B38B) y ciruela (#3D1E3A)
+   --------------------------------------------------------------------- */
+:root {
+  /* Arena / Warm Sand (color principal del logo) */
+  --arena: #F2B38B;
+  --arena-claro: #F7D4B8;
+  --arena-oscuro: #D4966E;
+  --arena-suave: #FBE8D3;
+
+  /* Ciruela / Dark Plum (color secundario del logo) */
+  --ciruela: #3D1E3A;
+  --ciruela-claro: #5A2D56;
+  --ciruela-suave: #E8D5E6;
+
+  /* Fondo general: blanco cálido suave */
+  --fondo: #FDFBF7;
+
+  /* Texto */
+  --texto: #3D1E3A;
+  --texto-suave: rgba(61, 30, 58, 0.72);
+  --texto-sobre-oscuro: #FDFBF7;
+
+  /* Superficies y hairlines */
+  --superficie: #FFFFFF;
+  --borde: rgba(61, 30, 58, 0.07);
+
+  /* Sombras en capas: base ciruela para coherencia */
+  --sombra-suave: 0 1px 2px rgba(61, 30, 58, 0.04), 0 4px 6px -1px rgba(61, 30, 58, 0.05);
+  --sombra: 0 4px 6px -1px rgba(61, 30, 58, 0.05), 0 10px 15px -3px rgba(61, 30, 58, 0.05);
+  --sombra-fuerte: 0 10px 15px -3px rgba(61, 30, 58, 0.06), 0 30px 60px -15px rgba(61, 30, 58, 0.10);
+  --sombra-hover: 0 6px 8px -2px rgba(61, 30, 58, 0.05), 0 24px 40px -10px rgba(61, 30, 58, 0.12);
+
+  /* Radios: tarjetas 24-32px, botones píldora */
+  --radio: 24px;
+  --radio-grande: 32px;
+
+  /* Curva de micro-interacción: imita la física de iOS */
+  --curva: cubic-bezier(0.16, 1, 0.3, 1);
+  --transicion: all 0.4s var(--curva);
+
+  /* Curva líquida: rebote pequeño al final, como gelatina */
+  --rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /*
+    Textura de ruido fractal (feTurbulence) para el vidrio real:
+    ningún cristal es perfectamente liso. Se aplica como overlay al 5%.
+  */
+  --ruido: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='grano'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23grano)'/%3E%3C/svg%3E");
+
+  /*
+    Patrones de fondo decorativos: espirales, burbujas, ondas, puntos
+    Cada sección usa uno diferente para variedad visual sutil
+  */
+  --patron-espirales: url("../assets/patron-espirales.svg");
+  --patron-burbujas: url("../assets/patron-burbujas.svg");
+  --patron-ondas: url("../assets/patron-ondas.svg");
+  --patron-puntos: url("../assets/patron-puntos.svg");
+  --patron-topografico: url("../assets/patron-topografico.svg");
+
+  /*
+    Ondas orgánicas entre secciones: el color de la sección ANTERIOR
+    "muerde" la siguiente. Cada ola usa arena o ciruela.
+  */
+  --ola-fondo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 96' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H1440 V64 C1280 96 1152 40 1008 56 C864 72 768 96 624 80 C480 64 384 96 240 88 C144 82 48 64 0 44 Z' fill='%23FDFBF7'/%3E%3C/svg%3E");
+  --ola-arena: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 96' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H1440 V64 C1280 96 1152 40 1008 56 C864 72 768 96 624 80 C480 64 384 96 240 88 C144 82 48 64 0 44 Z' fill='%23F2B38B'/%3E%3C/svg%3E");
+  --ola-ciruela: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 96' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H1440 V64 C1280 96 1152 40 1008 56 C864 72 768 96 624 80 C480 64 384 96 240 88 C144 82 48 64 0 44 Z' fill='%233D1E3A'/%3E%3C/svg%3E");
+
+  /* Medidas */
+  --ancho-max: 1120px;
+  --alto-menu: 84px;
+}
+
+/* ---------------------------------------------------------------------
+   2. BASE — tipografía de sistema, texto grande y cómodo
+   --------------------------------------------------------------------- */
+* {
+  box-sizing: border-box; /* incluye padding en el ancho */
+}
+
+html {
+  scroll-behavior: smooth; /* anclas suaves */
+  scroll-padding-top: var(--alto-menu); /* el menú fijo no tapa el título */
+}
+
+/*
+  Al saltar con el menú, el título nunca queda debajo del nav de
+  cristal: las secciones reservan 100px (más que la altura del menú).
+*/
+#inicio, #que-es, #senales, #mitos, #actividades, #ayuda, #aviso {
+  scroll-margin-top: 100px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--texto);
+  background-color: var(--fondo);
+  /* Patrón base: topográfico sutil */
+  background-image: var(--patron-topografico);
+  background-size: 400px;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 0.6em;
+}
+
+/* Titulares estilo Apple: grandes, semibold/negrita y ligeramente
+   apretados, con ligaduras activadas para máxima legibilidad */
+h1, h2 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  /* Reparte las palabras entre las líneas: nunca deja viudas */
+  text-wrap: balance;
+}
+
+h1 { font-weight: 700; }
+h2 { font-weight: 600; }
+
+h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--ciruela);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s var(--curva), opacity 0.3s var(--curva);
+}
+
+a:hover { color: var(--ciruela-claro); }
+
+/* Foco visible solo cuando se navega con teclado: elegante, 2px + aire */
+:focus-visible {
+  outline: 2px solid var(--ciruela);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+::selection {
+  background: var(--ciruela-suave);
+  color: var(--texto);
+}
+/* ---------------------------------------------------------------------
+   3. UTILIDADES
+   --------------------------------------------------------------------- */
+
+/*
+   GRANO DEL CRISTAL — overlay de ruido fractal sobre el desenfoque.
+   Solo en los elementos de vidrio clave: nav superior, tab bar móvil,
+   tarjetas del bento y tarjetas de mitos. Al 5% y con mix-blend-mode
+   "overlay" quita el look plástico del blur sin saturar la vista.
+*/
+.cabecera::after,
+.tab-bar::after,
+#actividades .actividad::before,
+.volteable__cara--frente::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--ruido);
+  opacity: 0.08;              /* justo para que el ojo perciba el grano */
+  mix-blend-mode: overlay;
+  pointer-events: none;       /* nunca interfiere con clics */
+  z-index: 0;
+}
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.contenedor--corto {
+  max-width: 780px;
+}
+
+/* Mucho aire: 8rem vertical en escritorio */
+.seccion {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.seccion__titulo {
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.seccion__intro {
+  max-width: 65ch; /* el ojo nunca pierde la línea al saltar de renglón */
+  color: var(--texto-suave);
+  margin-bottom: 40px;
+}
+
+/* Rejillas genéricas */
+.rejilla {
+  display: grid;
+  gap: 24px;
+}
+
+.rejilla--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.rejilla--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+/* Bloque de texto con ancho cómodo de lectura */
+.bloque-texto {
+  max-width: 65ch;
+}
+
+.bloque-texto p { color: var(--texto); }
+
+.bloque-texto strong { font-weight: 600; }
+
+/* Botones: píldora perfecta, física líquida de iOS */
+.boton {
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;   /* lectura perfecta */
+  text-transform: none;
+  padding: 16px 32px;
+  border-radius: 999px;
+  text-decoration: none;
+  /* Curva elástica: al soltar, el botón rebota como gelatina */
+  transition: transform 0.5s var(--rebote), box-shadow 0.5s ease,
+              opacity 0.3s ease, background-color 0.3s ease;
+}
+
+/* Al pulsar, se hunde al instante y destella luz por dentro */
+.boton:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+  box-shadow: var(--sombra-suave), inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.boton--primario {
+  background-color: var(--ciruela);
+  color: #FFFFFF;
+  box-shadow: var(--sombra-suave);
+}
+
+.boton--primario:hover {
+  background-color: var(--ciruela-claro);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--sombra);
+}
+
+.boton--secundario {
+  background-color: #FFFFFF;
+  color: var(--ciruela);
+  border: 1px solid var(--ciruela-suave);
+  box-shadow: var(--sombra-suave);
+}
+
+.boton--secundario:hover {
+  background-color: var(--ciruela-suave);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--sombra);
+}
+
+/* ---------------------------------------------------------------------
+   4. CABECERA Y MENÚ — sticky con cristal esmerilado
+   --------------------------------------------------------------------- */
+.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* Vidrio real: casi 0% opacidad, solo refracción óptica */
+  background: rgba(253, 251, 247, 0.03);
+  -webkit-backdrop-filter: blur(100px) saturate(220%);
+  backdrop-filter: blur(100px) saturate(220%);
+  border-bottom: 1px solid rgba(61, 30, 58, 0.03);
+  /* Solo el filo de luz del vidrio */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+              inset 1px 0 0 rgba(255, 255, 255, 0.15),
+              inset -1px 0 0 rgba(255, 255, 255, 0.15),
+              inset 0 -1px 0 rgba(61, 30, 58, 0.02);
+}
+
+
+/* Las letras flotan 1px sobre el vidrio: más legibles sin perder nitidez */
+.marca,
+.menu__lista a {
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.cabecera__contenedor {
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: var(--alto-menu);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--texto);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.12rem;
+}
+
+.marca:hover { opacity: 1; color: var(--texto); }
+
+.marca__hoja { font-size: 1.4rem; }
+
+/* El logo pasa a ser imagen (assets/marca/): altura fija y ancho
+   automático, sin deformarse nunca dentro del cristal del nav */
+.logo-imagen {
+  height: 68px;
+  width: auto;
+  display: block;
+}
+
+/* En el pie (fondo oscuro) va la versión blanca del logo:
+   display block + auto margin lo centra sobre el footer */
+.pie__marca .logo-imagen {
+  margin: 0 auto;
+  height: 88px; /* más grande en el footer para mejor legibilidad */
+}
+
+/* Botón hamburguesa: oculto en escritorio */
+.boton-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  width: 46px;
+  height: 42px;
+  padding: 8px;
+  background-color: rgba(61, 30, 58, 0.12);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.boton-menu:active { transform: scale(0.94); }
+
+/* Cada barra del icono hamburguesa */
+.boton-menu .barra {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--texto);
+  border-radius: 2px;
+  transition: transform 0.4s var(--curva), opacity 0.3s ease;
+}
+
+/* Estado abierto: las barras se convierten en una X */
+.boton-menu.activo .barra:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+.boton-menu.activo .barra:nth-child(2) { opacity: 0; }
+.boton-menu.activo .barra:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+.menu__lista {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu__lista a {
+  display: block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: var(--texto);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transicion);
+}
+
+.menu__lista a:hover {
+  background-color: rgba(61, 30, 58, 0.08);
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+   5. HERO — orbes desenfocados de color, estilo fondo de macOS
+   --------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  /* Contexto de apilado propio: así los orbes con z-index negativo
+     quedan detrás del texto pero por encima del fondo */
+  z-index: 0;
+  overflow: hidden;
+  padding: 9rem 0 10rem;
+  background: linear-gradient(180deg, var(--fondo) 0%, var(--arena-suave) 100%);
+}
+
+/*
+  Dos orbes grandes y desenfocados (blur 80px): dan profundidad sin
+  ruido visual. El ::before es ciruela suave, el ::after ciruela.
+*/
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Orbe ciruela suave: arriba a la derecha */
+.hero::before {
+  width: 560px;
+  height: 560px;
+  top: -180px;
+  right: -120px;
+  background-color: var(--ciruela-suave);
+  opacity: 0.55;
+}
+
+/* Orbe ciruela: abajo a la izquierda */
+.hero::after {
+  width: 480px;
+  height: 480px;
+  bottom: -200px;
+  left: -140px;
+  background-color: var(--ciruela);
+  opacity: 0.25;
+}
+
+.hero__contenedor {
+  position: relative; /* por encima de los orbes */
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.hero__titulo {
+  font-size: clamp(2.4rem, 6.5vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+
+.hero__subtitulo {
+  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  color: var(--texto-suave);
+  max-width: 56ch;
+  margin: 0 auto 40px;
+}
+
+.hero__botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Ondas decorativas: transición suave hacia la siguiente sección */
+.hero__ondas {
+  position: absolute;
+  inset: auto 0 -40px 0;
+  height: 120px;
+  z-index: 1;
+  background:
+    radial-gradient(60% 100% at 20% 100%, var(--fondo) 62%, transparent 63%),
+    radial-gradient(50% 100% at 65% 100%, var(--fondo) 60%, transparent 61%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/*
+  Nota sobre los fondos: cada sección se colorea con su selector #id
+  (#que-es, #senales, #mitos...). Así los fondos ganan a cualquier
+  clase modificadora que siga presente en el HTML.
+*/
+
+/* ---------------------------------------------------------------------
+   6. QUE ES — 7 columnas de texto + 5 de panel destacado, desplazado
+   --------------------------------------------------------------------- */
+#que-es {
+  background-color: var(--fondo);
+}
+
+/* Rejilla de 12 columnas para repartir 7 + 5 y romper la línea recta */
+#que-es .contenedor {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+/* El título ocupa todo el ancho */
+#que-es .seccion__titulo { grid-column: 1 / -1; }
+
+/* Columna izquierda: el texto, 7 de las 12 columnas */
+#que-es .bloque-texto { grid-column: span 7; margin: 0; }
+
+/* Columna derecha: panel destacado, 5 columnas, subido para romper
+   la línea horizontal */
+#que-es .rejilla--3 {
+  grid-column: span 5;
+  margin-top: -2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--arena);
+  border-radius: var(--radio-grande);
+  padding: 32px;
+  box-shadow: var(--sombra-fuerte);
+}
+
+/*
+  El dato destacado se inyecta como texto del ::before para no
+  depender de cambios en el HTML.
+*/
+#que-es .rejilla--3::before {
+  content: "1 de cada 7 adolescentes en el mundo vive con un problema de salud mental.";
+  display: block;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Las tres tarjetas internas, en blanco, sobre el panel menta */
+#que-es .rejilla--3 .tarjeta {
+  background-color: var(--superficie);
+  border: none;
+  box-shadow: none;
+  padding: 16px 24px;
+  border-radius: 16px;
+}
+
+#que-es .rejilla--3 .tarjeta__emoji { font-size: 1.6rem; margin-bottom: 8px; }
+#que-es .rejilla--3 .tarjeta h3 { font-size: 1.05rem; margin-bottom: 8px; }
+#que-es .rejilla--3 .tarjeta p { font-size: 0.95rem; }
+
+/* ---------------------------------------------------------------------
+   7. SENALES — fondo arena suave, tarjetas blancas con iconos SVG
+   --------------------------------------------------------------------- */
+#senales {
+  background-color: var(--arena-suave);
+}
+
+#senales .contenedor {
+  max-width: 1020px;
+  text-align: center;
+}
+
+#senales .seccion__intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Rejilla de 3 columnas en escritorio */
+#senales .rejilla--2 {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  text-align: left;
+}
+
+/* Tarjetas: blanco con degradado de luz superior + bisel de cristal */
+#senales .tarjeta {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F9FBF9 100%);
+  border: none;
+  border-radius: var(--radio);
+  padding: 32px 24px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), var(--sombra);
+  transition: var(--transicion);
+}
+
+#senales .tarjeta:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), var(--sombra-hover);
+}
+
+/*
+  Icono SVG monocromático dentro de un contenedor ciruela suave de
+  esquinas redondeadas (estilo iOS).
+*/
+.tarjeta__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border-radius: 15px;
+  background-color: var(--ciruela-suave);
+  color: var(--ciruela);
+}
+
+.tarjeta__icono svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* ---------------------------------------------------------------------
+   8. MITOS — arena suave, 2 columnas, tarjetas volteables
+   --------------------------------------------------------------------- */
+#mitos {
+  background-color: var(--arena-suave);
+}
+
+#mitos .contenedor { max-width: 1020px; }
+
+/* Solo 2 columnas en escritorio, con bastante separación */
+#mitos .rejilla--3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 24px;
+}
+
+/* Altura mayor para que el texto respire */
+#mitos .volteable,
+#mitos .volteable__interior {
+  min-height: 210px;
+}
+
+/*
+  Efecto de "presión" líquida: la tarjeta cede bajo el cursor
+  (escala ligeramente menor + inclinación) y el rebote elástico la
+  devuelve. Gana especificidad a .revelar.visible y respeta el giro 3D.
+*/
+#contenedorMitos .volteable:hover,
+#contenedorMitos .volteable:focus-visible {
+  transform: scale(0.98) rotateX(2deg);
+  transition: transform 0.5s var(--rebote);
+}
+
+/* ---------------------------------------------------------------------
+   9. ACTIVIDADES — bento box estilo Apple sobre fondo casi blanco
+   --------------------------------------------------------------------- */
+#actividades {
+  background-color: var(--fondo);
+}
+
+/*
+  El carrusel es inyectado por tabbar.js. En escritorio no debe existir
+  para el layout: display: contents hace que sus hijas (las 4 tarjetas)
+  sigan siendo los hijos de la rejilla del bento box, tal cual antes.
+  Solo en ≤520px (sección 16) se convierte en un carrusel con scroll.
+*/
+.bento-carrusel {
+  display: contents;
+}
+
+/* Rejilla bento: 3 columnas, la respiración es la pieza grande */
+#actividades .contenedor {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2rem;
+  align-items: stretch;
+}
+
+/* Título e intro a ancho completo */
+#actividades .seccion__titulo,
+#actividades .seccion__intro { grid-column: 1 / -1; }
+
+/* Cada actividad es una tarjeta de vidrio real:
+   97% transparente, solo refracción y filo de luz */
+.actividad {
+  position: relative;
+  background: rgba(255, 255, 255, 0.025);
+  -webkit-backdrop-filter: blur(100px) saturate(220%);
+  backdrop-filter: blur(100px) saturate(220%);
+  border: none;
+  border-radius: var(--radio-grande);
+  padding: 32px;
+  /* Solo el filo especular del vidrio */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 1px 0 0 rgba(255, 255, 255, 0.12),
+              inset -1px 0 0 rgba(255, 255, 255, 0.12),
+              inset 0 -1px 0 rgba(61, 30, 58, 0.02),
+              0 2px 16px rgba(61, 30, 58, 0.015);
+  /* Texto legible: el vidrio apenas opaca */
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.25);
+  transition: transform 0.5s var(--rebote), box-shadow 0.5s ease;
+}
+
+/* Las letras de los botones no necesitan el halo del vidrio */
+.boton { text-shadow: none; }
+
+#actividades .actividad:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+              inset 1px 0 0 rgba(255, 255, 255, 0.15),
+              inset -1px 0 0 rgba(255, 255, 255, 0.15),
+              inset 0 -1px 0 rgba(61, 30, 58, 0.025),
+              0 8px 32px rgba(61, 30, 58, 0.025);
+}
+
+/*
+  Colocación del bento. nth-of-type cuenta solo los <article>: el h2 y
+  el p no cuentan. 1=respiración, 2=diario, 3=frases, 4=quiz.
+  (En móvil todo esto se anula en la sección 16. RESPONSIVE.)
+*/
+#actividades .actividad:nth-of-type(1) {
+  grid-column: 1 / 3;   /* respiración: 2 columnas y 2 filas */
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#actividades .actividad:nth-of-type(2) {
+  grid-column: 3;       /* diario: 1 columna */
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#actividades .actividad:nth-of-type(3) {
+  grid-column: 3;       /* frases: 1 columna, debajo del diario */
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+#actividades .actividad:nth-of-type(4) {
+  grid-column: 1 / 4;   /* quiz: ancho completo, cierra el bento */
+  grid-row: 3;
+}
+
+/* ---------------------------------------------------------------------
+   10. AYUDA — fondo arena suave, pasos en tarjetas blancas
+   --------------------------------------------------------------------- */
+#ayuda {
+  background-color: var(--arena-suave);
+}
+
+#ayuda .contenedor { max-width: 1020px; }
+
+/* Los 5 pasos en rejilla de 2 columnas (2 + 2 + 1) */
+#ayuda .pasos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.paso {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background-color: var(--superficie);
+  border: none;
+  border-radius: var(--radio);
+  padding: 24px;
+  margin-bottom: 0; /* el espacio lo da el gap de la rejilla */
+  box-shadow: var(--sombra);
+  transition: var(--transicion);
+}
+
+.paso:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--sombra-hover);
+}
+
+.paso__numero {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ciruela-suave);
+  color: var(--ciruela);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.paso h3 { font-size: 1.08rem; margin-bottom: 8px; }
+.paso p { margin-bottom: 0; color: var(--texto-suave); }
+
+/* Consejo final, alineado con el ancho de la rejilla */
+.consejo {
+  margin-top: 2rem;
+  padding: 32px;
+  background-color: var(--superficie);
+  border-radius: var(--radio);
+  border: none;
+  box-shadow: var(--sombra);
+  transition: var(--transicion);
+}
+
+.consejo h3 { font-size: 1.15rem; }
+.consejo p { margin-bottom: 0; color: var(--texto-suave); }
+
+/* ---------------------------------------------------------------------
+   11. AVISO — bloque destacado en blanco
+   --------------------------------------------------------------------- */
+#aviso {
+  background-color: var(--arena-suave);
+}
+
+.aviso {
+  background-color: var(--superficie);
+  border: none;
+  border-radius: var(--radio-grande);
+  padding: 48px;
+  text-align: center;
+  box-shadow: var(--sombra-fuerte);
+}
+
+.aviso__icono { font-size: 2.6rem; display: block; margin-bottom: 16px; }
+
+.aviso__titulo { font-size: 1.6rem; font-weight: 600; }
+
+.aviso p {
+  color: var(--texto-suave);
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------------------------------------------------------------------
+   12. TARJETAS, MITOS VOLTEABLES Y ACTIVIDADES
+   --------------------------------------------------------------------- */
+
+/* Tarjeta genérica: blanco puro sobre fondo beige, sin bordes duros */
+.tarjeta {
+  background-color: var(--superficie);
+  border: none;
+  border-radius: var(--radio);
+  padding: 24px;
+  box-shadow: var(--sombra);
+}
+
+.tarjeta__emoji {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+/*
+  Iconos Feather en títulos y tarjetas: se escalan con la fuente
+  del título (1.1em) y heredan su color (stroke: currentColor),
+  así se ven nítidos sin importar el tamaño ni dónde se usen.
+*/
+.icono-titulo {
+  width: 1.2em;
+  height: 1.2em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 8px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Cuando el icono va solo en su contenedor (sin texto a la derecha),
+   el margen de separación sobra: lo neutralizamos */
+.tarjeta__emoji .icono-titulo,
+.aviso__icono .icono-titulo {
+  margin-right: 0;
+}
+
+.tarjeta h3 { font-size: 1.15rem; }
+.tarjeta p { margin-bottom: 0; color: var(--texto-suave); }
+
+/* Contenedor del giro 3D */
+.volteable {
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.volteable__interior {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 210px;
+  /* Transición propia del giro: no usar "all" aquí para no interferir */
+  transition: transform 0.7s var(--curva);
+  transform-style: preserve-3d;
+}
+
+/* Al girar 180° se ve la cara trasera */
+.volteable.girado .volteable__interior { transform: rotateY(180deg); }
+
+/* Las dos caras comparten el mismo espacio */
+.volteable__cara {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+  border-radius: var(--radio);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  text-align: center;
+}
+
+.volteable__cara--frente {
+  /* Vidrio real: 97% transparente */
+  background: rgba(255, 255, 255, 0.025);
+  -webkit-backdrop-filter: blur(100px) saturate(220%);
+  backdrop-filter: blur(100px) saturate(220%);
+  border: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 1px 0 0 rgba(255, 255, 255, 0.12),
+              inset -1px 0 0 rgba(255, 255, 255, 0.12),
+              inset 0 -1px 0 rgba(61, 30, 58, 0.02),
+              0 2px 16px rgba(61, 30, 58, 0.015);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+.volteable__cara--atras {
+  transform: rotateY(180deg);
+  background-color: var(--arena);
+  color: #FFFFFF;
+  box-shadow: var(--sombra);
+}
+
+/* Giro terminado: la tarjeta está "más cerca" del usuario, así que la
+   sombra se hace más oscura y aparece por debajo, como una sombra real */
+.volteable.girado .volteable__cara--atras {
+  box-shadow: 0 16px 32px -8px rgba(31, 58, 51, 0.28),
+              0 40px 64px -16px rgba(31, 58, 51, 0.20);
+}
+
+.volteable__cara--atras p { color: #fff; }
+
+.volteable__etiqueta {
+  align-self: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: var(--arena-suave);
+  color: var(--texto);
+}
+
+.volteable__cara--atras .volteable__etiqueta {
+  background-color: #fff;
+  color: var(--arena-oscuro);
+}
+
+.volteable__cara p {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.volteable__pista {
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+
+/* --- Estilos compartidos de actividades --- */
+.actividad__titulo { font-size: 1.35rem; }
+
+.actividad__desc {
+  color: var(--texto-suave);
+  max-width: 60ch;
+}
+
+/* --- Diario --- */
+.diario__etiqueta {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.diario__area {
+  width: 100%;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--texto);
+  padding: 16px 24px;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  background-color: var(--arena-suave);
+  /* El layout nunca las rompe: Apple prefiere cajas de altura constante */
+  resize: none;
+  min-height: 130px;
+  transition: border-color 0.3s var(--curva), box-shadow 0.3s var(--curva),
+              background-color 0.3s var(--curva);
+}
+
+.diario__area:focus {
+  border-color: var(--ciruela);
+  background-color: var(--superficie);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(61, 30, 58, 0.16);
+}
+
+.diario__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.diario__acciones .boton { padding: 8px 24px; font-size: 0.98rem; }
+
+.diario__estado {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ciruela);
+}
+
+/* --- Frases --- */
+.frases__texto {
+  margin: 0 0 16px;
+  padding: 32px;
+  background-color: var(--arena-suave);
+  border: none;
+  border-radius: 16px;
+  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+}
+
+/* --- Quiz --- */
+.quiz__barra {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  margin-bottom: 16px;
+}
+
+.quiz__pregunta {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+
+.quiz__opciones {
+  display: grid;
+  gap: 16px;
+}
+
+/* Cada opción es un botón ancho */
+.quiz__opcion {
+  text-align: left;
+  font: inherit;
+  font-size: 1.02rem;
+  color: var(--texto);
+  background-color: var(--arena-suave);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.4s var(--curva);
+}
+
+.quiz__opcion:hover:not(:disabled) {
+  border-color: var(--ciruela);
+  background-color: var(--ciruela-suave);
+  transform: translateX(4px);
+}
+
+.quiz__opcion:disabled { cursor: default; }
+
+/* Ciruela cuando es la respuesta correcta */
+.quiz__opcion.correcta {
+  background-color: var(--ciruela-suave);
+  border-color: var(--ciruela);
+  color: var(--ciruela);
+  font-weight: 600;
+}
+
+/* Rojo suave cuando se eligió mal */
+.quiz__opcion.incorrecta {
+  background-color: #FBE9E7;
+  border-color: #E3A29A;
+  color: #8C2F26;
+  font-weight: 600;
+}
+
+.quiz__feedback {
+  margin: 16px 0 0;
+  padding: 16px 24px;
+  border-radius: 16px;
+  background-color: var(--ciruela-suave);
+  font-size: 0.98rem;
+}
+
+.quiz__feedback.ok { background-color: var(--ciruela-suave); border-color: var(--ciruela); }
+.quiz__feedback.mal { background-color: #FBE9E7; }
+
+.quiz__resultado {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.quiz__puntaje {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ciruela);
+  margin-bottom: 8px;
+}
+
+.quiz__mensaje { color: var(--texto-suave); }
+
+/* ---------------------------------------------------------------------
+   13. BOTÓN VOLVER ARRIBA
+   Fijo en la esquina inferior derecha. Oculto por defecto; scroll.js
+   le añade .visible cuando el usuario baja más de 400px.
+   --------------------------------------------------------------------- */
+#volverArriba {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #FFFFFF;
+  background-color: var(--ciruela);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+  /* Oculto por defecto: se desliza hacia fuera y se vuelve transparente */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity 0.4s var(--curva), transform 0.4s var(--curva),
+              visibility 0.4s var(--curva), background-color 0.3s ease;
+  z-index: 60; /* por encima del contenido y del menú */
+}
+
+#volverArriba.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#volverArriba:hover {
+  background-color: var(--ciruela-claro);
+  transform: translateY(-3px) scale(1.05);
+}
+
+#volverArriba:active { transform: scale(0.95); }
+
+/* ---------------------------------------------------------------------
+   13b. BARRA DE NAVEGACIÓN INFERIOR MÓVIL (la inyecta tabbar.js)
+   En escritorio no existe (display: none). En ≤520px es una tab bar
+   fija con cristal esmerilado, como en iOS/Android.
+   --------------------------------------------------------------------- */
+.tab-bar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------
+   14. ANIMACIONES DE ENTRADA
+   Los elementos con .revelar empiezan invisibles y bajados 20px;
+   al entrar en pantalla scroll.js les añade .visible.
+   --------------------------------------------------------------------- */
+.revelar {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--curva), transform 0.7s var(--curva);
+}
+
+.revelar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*
+  Si el sistema pide menos movimiento, el contenido aparece ya en su
+  sitio: sin opacidad, sin desplazamiento y sin transición.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .revelar,
+  .revelar.visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Sin elevaciones al pasar el cursor */
+  .tarjeta:hover,
+  .actividad:hover,
+  .paso:hover,
+  #contenedorMitos .volteable:hover,
+  #contenedorMitos .volteable:focus-visible,
+  .boton:hover,
+  #volverArriba:hover {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   15. PIE
+   --------------------------------------------------------------------- */
+.pie {
+  background-color: var(--ciruela);
+  color: var(--arena-claro);
+  padding: 48px 0;
+  text-align: center;
+}
+
+.pie__marca { font-weight: 700; font-size: 1.12rem; margin-bottom: 8px; letter-spacing: -0.01em; }
+.pie__texto { color: var(--arena-suave); max-width: 56ch; margin: 0 auto 8px; }
+
+/* Enlace de correo: arena claro, que sí contrasta sobre el fondo ciruela */
+.pie__contacto {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+}
+
+.pie__contacto a {
+  color: var(--arena-claro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pie__contacto a:hover { color: var(--arena); opacity: 1; }
+.pie__legal { color: rgba(247, 212, 184, 0.55); font-size: 0.85rem; margin: 0; }
+
+/* ---------------------------------------------------------------------
+   16. RESPONSIVE
+   --------------------------------------------------------------------- */
+
+/* Tablets y celulares: el aire baja a 4rem y todo se apila */
+@media (max-width: 960px) {
+
+  /* El botón hamburguesa aparece y el menú se despliega */
+  .boton-menu { display: flex; }
+
+  .menu {
+    /* Oculto por defecto en móvil */
+    display: none;
+    position: absolute;
+    top: var(--alto-menu);
+    left: 0;
+    right: 0;
+    /* Vidrio real */
+    background: rgba(253, 251, 247, 0.04);
+    -webkit-backdrop-filter: blur(100px) saturate(220%);
+    backdrop-filter: blur(100px) saturate(220%);
+    border-bottom: 1px solid rgba(61, 30, 58, 0.02);
+    box-shadow: var(--sombra);
+    padding: 16px 24px;
+  }
+
+  .menu.abierto { display: block; }
+
+  .menu__lista {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .menu__lista a { padding: 16px; }
+
+  /* Paddings verticales bajan a 4rem */
+  .seccion { padding: 4rem 0; }
+
+  /* "Qué es": el dato destacado pasa debajo del texto, sin desplazamiento */
+  #que-es .contenedor { grid-template-columns: 1fr; gap: 2rem; }
+  #que-es .bloque-texto { grid-column: 1; }
+  #que-es .rejilla--3 { grid-column: 1; margin-top: 0; }
+
+  /* Señales: 2 columnas en tablet */
+  #senales .rejilla--2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Bento en tablet: 2 columnas (respiración+diario / frases+quiz).
+     Lo coloca la rejilla por orden natural, sin posicionamiento a mano */
+  #actividades .contenedor {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  #actividades .actividad:nth-of-type(1),
+  #actividades .actividad:nth-of-type(2),
+  #actividades .actividad:nth-of-type(3),
+  #actividades .actividad:nth-of-type(4) {
+    grid-column: auto;
+    grid-row: auto;
+    display: block;
+  }
+
+  /* Pasos: 1 columna en tablet */
+  #ayuda .pasos { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+
+  /* Espacio para la cápsula inferior, incluida la zona de gestos del iPhone */
+  body {
+    font-size: 1.05rem;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+
+  /* Navegación nativa: abajo. Adiós menú hamburguesa superior */
+  .boton-menu,
+  .menu { display: none; }
+
+  /* Orbes más pequeños para no saturar pantallas chicas */
+  .hero::before { width: 340px; height: 340px; top: -140px; right: -120px; }
+  .hero::after { width: 300px; height: 300px; bottom: -140px; left: -120px; }
+
+  /* El titular cabe en 2-3 líneas y no deja viudas (text-wrap: balance) */
+  .hero { padding: 5.5rem 0 6rem; }
+  .hero__titulo { font-size: 2.2rem; }
+
+  .actividad,
+  .tarjeta,
+  .aviso,
+  .paso { padding: 24px; border-radius: var(--radio); }
+
+  .aviso { padding: 32px 24px; border-radius: var(--radio); }
+
+  .actividad { padding: 24px; }
+
+  /* En pantalla táctil el hover se "pega": material estable, sin salto */
+  #actividades .actividad:hover {
+    transform: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 1px 0 0 rgba(255, 255, 255, 0.12),
+                inset -1px 0 0 rgba(255, 255, 255, 0.12),
+                inset 0 -1px 0 rgba(61, 30, 58, 0.02),
+                0 2px 16px rgba(61, 30, 58, 0.015);
+  }
+
+  .hero__botones .boton { width: 100%; text-align: center; }
+
+  /* Señales y mitos: una sola columna */
+  #senales .contenedor,
+  #mitos .contenedor { text-align: left; }
+
+  #senales .rejilla--2,
+  #mitos .rejilla--3 { grid-template-columns: 1fr; }
+
+  /* Separación más corta al apilar (sigue siendo múltiplo de 8) */
+  #mitos .rejilla--3 { gap: 1.5rem; }
+
+  /* Mitos: más altura para que la cara trasera respire, y caras con
+     un poco menos de padding para ganar sitio de verdad */
+  #mitos .volteable,
+  #mitos .volteable__interior { min-height: 224px; }
+  .volteable__cara { padding: 24px; }
+
+  /* Logo en footer: un poco más pequeño en móvil muy estrecho */
+  .pie__marca .logo-imagen { height: 68px; }
+
+  /* --- Bento → CARRUSEL IMANTADO (estilo App Store / Wallet) --- */
+  #actividades .contenedor { display: block; }
+
+  .bento-carrusel {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    gap: 24px;
+    margin: 0 -24px;            /* las tarjetas sangran hasta el borde */
+    padding: 8px 24px 24px;     /* 24px laterales: el texto no toca el borde */
+    -ms-overflow-style: none;   /* IE/Edge heredado */
+    scrollbar-width: none;      /* Firefox */
+  }
+
+  .bento-carrusel::-webkit-scrollbar {
+    display: none;              /* navegadores WebKit: rueda limpio */
+  }
+
+  .bento-carrusel .actividad {
+    flex: 0 0 auto;
+    width: 85vw;
+    max-width: 85vw;
+    scroll-snap-align: center;  /* cada tarjeta se imanta al centro */
+  }
+
+  /* El número del paso se mantiene en línea con el texto */
+  .paso { padding: 16px; gap: 16px; }
+
+  /* Botón volver arriba: flotando sobre la cápsula inferior */
+  #volverArriba {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    right: 16px;
+    bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+
+  /* --- Cápsula inferior: vidrio real, como el dock de iOS --- */
+  .tab-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 16px calc(16px + env(safe-area-inset-bottom)) 16px;
+    border-radius: 32px;
+    z-index: 70;
+    background: rgba(253, 251, 247, 0.04);
+    -webkit-backdrop-filter: blur(100px) saturate(220%);
+    backdrop-filter: blur(100px) saturate(220%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 1px 0 0 rgba(255, 255, 255, 0.12),
+                inset -1px 0 0 rgba(255, 255, 255, 0.12),
+                inset 0 -1px 0 rgba(61, 30, 58, 0.02),
+                0 4px 24px rgba(61, 30, 58, 0.02);
+    padding: 8px;
+  }
+
+  /* Las etiquetas de la tab bar flotan sobre el vidrio */
+  .tab-bar__item {
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+
+  .tab-bar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-radius: 16px;
+    color: var(--texto-suave);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s var(--curva), transform 0.3s var(--curva);
+  }
+
+  .tab-bar__item svg { width: 24px; height: 24px; }
+
+  .tab-bar__item:active { transform: scale(0.94); }
+
+  .tab-bar__item.activo { color: var(--ciruela); }
+}
+
+/* ---------------------------------------------------------------------
+   17. IDENTIDAD VISUAL — "calma, respiración y crecimiento"
+   Mapa topográfico de marca, ondas orgánicas entre secciones,
+   resaltado de calma, elementos ambientales (la página respira) y
+   la firma de la hoja en las tarjetas de vidrio. Capas puramente
+   visuales: no toca estructura, ID ni lógica JS.
+   --------------------------------------------------------------------- */
+
+/* --- 18.1 Patrones decorativos por sección ---
+         Cada sección tiene su textura única: espirales, burbujas, ondas, puntos --- */
+.hero {
+  background-image: var(--patron-espirales),
+                    linear-gradient(180deg, var(--fondo) 0%, var(--arena-suave) 100%);
+  background-size: 400px, 100% 100%;
+}
+
+/* Qué es: puntos geométricos sutiles */
+#que-es {
+  background-image: var(--patron-puntos), var(--patron-topografico);
+  background-size: 120px, 400px;
+}
+
+/* Señales: burbujas orgánicas */
+#senales {
+  background-image: var(--patron-burbujas), var(--patron-topografico);
+  background-size: 200px, 400px;
+}
+
+/* Mitos: ondas orgánicas fluidas */
+#mitos {
+  background-image: var(--patron-ondas), var(--patron-topografico);
+  background-size: 400px, 400px;
+}
+
+/* Actividades: espirales (diferente al hero) */
+#actividades {
+  background-image: var(--patron-espirales), var(--patron-topografico);
+  background-size: 200px, 400px;
+}
+
+/* Ayuda: burbujas */
+#ayuda {
+  background-image: var(--patron-burbujas), var(--patron-topografico);
+  background-size: 200px, 400px;
+}
+
+/* Aviso: puntos geométricos */
+#aviso {
+  background-image: var(--patron-puntos), var(--patron-topografico);
+  background-size: 120px, 400px;
+}
+
+/*
+  --- 18.2 Ondas orgánicas: la sección "de arriba" muerde la siguiente ---
+
+  El color anterior (fondo, menta o beige según el tramo) entra en la
+  parte superior de cada sección con un trazado ondulado: de fondo→
+  señales, menta→mitos, beige→actividades, fondo→ayuda, menta→aviso.
+  El z-index 0 deja la ola bajo el contenido (.contenedor va con z-index: 1).
+*/
+#senales, #mitos, #actividades, #ayuda, #aviso {
+  /* + clip: jamás deja que los ornamentos generen scroll horizontal */
+  overflow: clip;
+}
+
+#senales::before,
+#mitos::before,
+#actividades::before,
+#ayuda::before,
+#aviso::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cada tramo usa el color de la sección que la precede */
+#senales::before     { background-image: var(--ola-ciruela); }
+#mitos::before       { background-image: var(--ola-ciruela); }
+#actividades::before { background-image: var(--ola-fondo); }
+#ayuda::before       { background-image: var(--ola-ciruela); }
+#aviso::before       { background-image: var(--ola-ciruela); }
+
+/* --- 18.3 Resaltado de calma: marcador fosforescente detrás de la
+        palabra. Es inline y clona su banda por fragmento, así que los
+        saltos de línea en móvil no cortan la firma --- */
+.resaltado {
+  background: linear-gradient(120deg, rgba(61, 30, 58, 0.25) 0%, rgba(61, 30, 58, 0.25) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 40%;
+  background-position: 0 88%;
+  display: inline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* --- 18.4 Elementos ambientales: 4 "respiraciones" de la página.
+        Formas orgánicas difuminadas que suben, bajan y se mecen en
+        ciclos largos (20-29s), siempre detrás del texto (el contenido
+        vive en .contenedor con z-index: 1) y sobre el fondo. A través
+        del cristal del bento se les ve borrosas: doble capa de calma. */
+#senales::after,
+#mitos::after,
+#actividades::after,
+#ayuda::after {
+  content: "";
+  position: absolute;
+  /* Gota orgánica, no círculo perfecto */
+  border-radius: 56% 44% 58% 42% / 48% 60% 40% 52%;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* El contenido jamás queda bajo los ornamentos */
+#senales .contenedor,
+#mitos .contenedor,
+#actividades .contenedor,
+#ayuda .contenedor {
+  position: relative;
+  z-index: 1;
+}
+
+/* Respiración 1 — señales: ciruela a la deriva, derecha */
+#senales::after {
+  top: 6%;
+  right: -140px;
+  width: 340px;
+  height: 340px;
+  background: rgba(61, 30, 58, 0.18);
+  animation: floteCalmaA 20s ease-in-out infinite;
+}
+
+/* Respiración 2 — mitos: ciruela tenue sobre arena suave, izquierda */
+#mitos::after {
+  bottom: 4%;
+  left: -140px;
+  width: 300px;
+  height: 300px;
+  background: rgba(61, 30, 58, 0.12);
+  animation: floteCalmaB 26s ease-in-out infinite;
+}
+
+/* Respiración 3 — actividades: desfasada con delay negativo */
+#actividades::after {
+  bottom: 8%;
+  right: -120px;
+  width: 320px;
+  height: 320px;
+  background: rgba(61, 30, 58, 0.12);
+  animation: floteCalmaA 23s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+/* Respiración 4 — ayuda: ciruela flotando sobre arena suave */
+#ayuda::after {
+  top: 14%;
+  left: -160px;
+  width: 340px;
+  height: 340px;
+  background: rgba(61, 30, 58, 0.15);
+  animation: floteCalmaB 29s ease-in-out infinite;
+  animation-delay: -14s;
+}
+
+/* Ciclo completo de 20s+ (0% = 100%: el bucle no salta nunca) */
+@keyframes floteCalmaA {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50%      { transform: translate(40px, -56px) rotate(6deg); }
+}
+
+@keyframes floteCalmaB {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50%      { transform: translate(-44px, 48px) rotate(-6deg); }
+}
+
+/* --- 18.5 Firma de la marca: la hoja del favicon en la esquina
+        superior derecha de las tarjetas de vidrio, al 5%.
+        Va en ::after porque ::before ya porta el grano del cristal --- */
+#actividades .actividad::after,
+.volteable__cara--frente::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 28px;
+  height: 28px;
+  background: url("../assets/favicon.svg") no-repeat center / contain;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* --- 18.6 Respeta el sistema: móvil compacta y menos movimiento --- */
+@media (max-width: 520px) {
+  /* Olas más bajas y gotas más pequeñas en pantallas chicas */
+  #senales::before,
+  #mitos::before,
+  #actividades::before,
+  #ayuda::before,
+  #aviso::before {
+    height: 32px;
+  }
+
+  #senales::after,
+  #mitos::after,
+  #actividades::after,
+  #ayuda::after {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* La página deja de respirar para quien pide menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  #senales::after,
+  #mitos::after,
+  #actividades::after,
+  #ayuda::after {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   18. FALLBACK — dispositivos sin backdrop-filter
+   El vidrio sin blur se ve lavado: en esos navegadores usamos un borde
+   sólido semi-opaco con el mismo tono del cristal. Contraste garantizado.
+   --------------------------------------------------------------------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .cabecera { background: rgba(253, 251, 247, 0.97); }
+  .tab-bar { background: rgba(253, 251, 247, 0.97); }
+  #actividades .actividad { background: #FFFFFF; }
+  .volteable__cara--frente { background-color: #FFFFFF; }
+}
+
+/* ---------------------------------------------------------------------
+   19. PULIDO FINAL DE PRODUCTO
+   Scrollbar estilo macOS, check elástico del diario y recompensa
+   del quiz. Capas externas a la estructura: nada de lo que ya existe
+   cambia de comportamiento.
+   --------------------------------------------------------------------- */
+
+/* --- 19.1 Barra de scroll: pastilla ciruela fina, como macOS --- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ciruela); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ciruela-claro); }
+
+/* Firefox: la misma pastilla vía estándar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ciruela) transparent;
+}
+
+/* En móvil desaparece del todo: las dedos ya clican directo */
+@media (max-width: 520px) {
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  html { scrollbar-width: none; }
+}
+
+/* --- 19.2 Check del diario: nace pequeño, rebota con --rebote
+        (misma curva elástica que los botones), espera 2 s y se
+        desvanece. El JS lo retira del DOM a los 2,4 s --- */
+.diario__check {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  vertical-align: -4px;
+  color: var(--ciruela);
+  transform-origin: 50% 50%;
+  animation: checkRebote 0.5s var(--rebote) both,
+             checkOcultar 0.4s ease 2s both;
+}
+
+/* Fase 1: de 0 a tamaño completo con rebote elástico */
+@keyframes checkRebote {
+  0%   { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* Fase 2: a los 2 s se encoge y funde a cero */
+@keyframes checkOcultar {
+  to { opacity: 0; transform: scale(0.5) rotate(-8deg); }
+}
+
+/* --- 19.3 Recompensa del quiz: al responder la última pregunta el
+        contenedor recibe .completado (lo activa quiz.js) y se convierte
+        en un premio: fondo ciruela suave, "pop" elástico y trofeo --- */
+#quiz.completado {
+  background-color: var(--ciruela-suave);
+  border-radius: 16px;
+  padding: 24px;
+  animation: popCalma 0.6s var(--rebote);
+}
+
+/* Trofeo (icono Feather "award") centrado sobre el puntaje */
+.completado .quiz__resultado::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 8px auto 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233D1E3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='7'/%3E%3Cpolyline points='8.21 13.89 7 23 12 20 17 23 15.79 13.88'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* El "pop": crece apenas a 1.02 y vuelve a 1 con curva de rebote */
+@keyframes popCalma {
+  0%   { transform: scale(0.97); }
+  55%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* --- 19.4 Respeto al sistema: las recompensas sin rebote pero
+        presentes (el check aparece ya en tamaño completo) --- */
+@media (prefers-reduced-motion: reduce) {
+  .diario__check {
+    animation: none;
+    transform: none;
+  }
+
+  #quiz.completado {
+    animation: none;
+    transform: none;
+  }
+}
